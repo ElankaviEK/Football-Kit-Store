@@ -1,0 +1,77 @@
+<%- include('../partials/header') %>
+
+<div class="container py-5">
+  <div class="row mb-4 align-items-center">
+    <div class="col">
+      <h1 class="page-title">Shop <% if (activeCategory) { %><span class="text-accent">— <%= activeCategory %></span><% } %></h1>
+    </div>
+    <div class="col-md-5">
+      <form action="/products" method="GET" class="d-flex gap-2">
+        <% if (activeCategory) { %>
+          <input type="hidden" name="category" value="<%= activeCategory %>">
+        <% } %>
+        <input type="text" name="search" class="form-control" placeholder="Search kits..." value="<%= search %>">
+        <button type="submit" class="btn btn-accent"><i class="bi bi-search"></i></button>
+        <% if (search) { %>
+          <a href="/products" class="btn btn-outline-secondary"><i class="bi bi-x"></i></a>
+        <% } %>
+      </form>
+    </div>
+  </div>
+
+  <div class="d-flex flex-wrap gap-2 mb-4">
+    <a href="/products" class="btn btn-sm <%= !activeCategory ? 'btn-accent' : 'btn-outline-secondary' %>">All</a>
+    <% for (var i = 0; i < categories.length; i++) { %>
+      <a href="/products?category=<%= encodeURIComponent(categories[i].category) %>"
+         class="btn btn-sm <%= activeCategory === categories[i].category ? 'btn-accent' : 'btn-outline-secondary' %>">
+        <%= categories[i].category %>
+      </a>
+    <% } %>
+  </div>
+
+  <% if (products.length === 0) { %>
+    <div class="text-center py-5">
+      <i class="bi bi-search display-3 text-muted"></i>
+      <p class="mt-3 text-muted">No products found. <a href="/products" class="link-accent">Clear filters</a></p>
+    </div>
+  <% } else { %>
+    <div class="row g-4">
+      <% for (var j = 0; j < products.length; j++) { %>
+        <% var p = products[j]; %>
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="product-card h-100">
+            <a href="/products/<%= p.id %>" class="text-decoration-none">
+              <div class="product-img-wrap">
+                <img src="https://via.placeholder.com/300x300/1a1a2e/ffffff?text=<%= encodeURIComponent(p.name.split(' ').slice(0,2).join('+')) %>"
+                     alt="<%= p.name %>" class="product-img">
+                <% if (p.stock === 0) { %>
+                  <span class="badge-out-stock">Out of Stock</span>
+                <% } else if (p.stock < 5) { %>
+                  <span class="badge-low-stock">Low Stock</span>
+                <% } %>
+              </div>
+              <div class="product-info">
+                <p class="product-category"><%= p.category %></p>
+                <h6 class="product-name"><%= p.name %></h6>
+                <p class="product-price">€<%= p.price.toFixed(2) %></p>
+              </div>
+            </a>
+            <% if (p.stock > 0 && currentUser) { %>
+              <form action="/cart/add" method="POST" class="px-3 pb-3">
+                <input type="hidden" name="productId" value="<%= p.id %>">
+                <input type="hidden" name="qty" value="1">
+                <button type="submit" class="btn btn-accent w-100 btn-sm">Add to Cart</button>
+              </form>
+            <% } else if (p.stock > 0) { %>
+              <div class="px-3 pb-3">
+                <a href="/auth/login" class="btn btn-outline-secondary w-100 btn-sm">Login to Buy</a>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

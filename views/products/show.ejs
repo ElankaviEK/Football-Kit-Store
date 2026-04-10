@@ -1,0 +1,74 @@
+<%- include('../partials/header') %>
+
+<div class="container py-5">
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/products" class="link-accent">Shop</a></li>
+      <li class="breadcrumb-item"><a href="/products?category=<%= product.category %>" class="link-accent"><%= product.category %></a></li>
+      <li class="breadcrumb-item active"><%= product.name %></li>
+    </ol>
+  </nav>
+
+  <div class="row g-5">
+    <div class="col-md-6">
+      <img src="https://via.placeholder.com/600x600/1a1a2e/ffffff?text=<%= encodeURIComponent(product.name.split(' ').slice(0,3).join('+')) %>"
+           alt="<%= product.name %>" class="img-fluid rounded product-detail-img">
+    </div>
+    <div class="col-md-6">
+      <span class="badge bg-secondary mb-2"><%= product.category %></span>
+      <h1 class="product-detail-title"><%= product.name %></h1>
+      <p class="product-detail-price">€<%= product.price.toFixed(2) %></p>
+      <p class="text-muted"><%= product.description %></p>
+
+      <div class="mb-4">
+        <% if (product.stock > 10) { %>
+          <span class="badge bg-success"><i class="bi bi-check-circle"></i> In Stock (<%= product.stock %> available)</span>
+        <% } else if (product.stock > 0) { %>
+          <span class="badge bg-warning text-dark"><i class="bi bi-exclamation-circle"></i> Low Stock — Only <%= product.stock %> left</span>
+        <% } else { %>
+          <span class="badge bg-danger">Out of Stock</span>
+        <% } %>
+      </div>
+
+      <% if (product.stock > 0) { %>
+        <% if (currentUser) { %>
+        <form action="/cart/add" method="POST" class="d-flex gap-3 align-items-end">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input type="hidden" name="productId" value="<%= product.id %>">
+          <div>
+            <label class="form-label">Quantity</label>
+            <input type="number" name="qty" class="form-control" value="1" min="1" max="<%= Math.min(product.stock, 10) %>" style="width:80px">
+          </div>
+          <button type="submit" class="btn btn-accent btn-lg"><i class="bi bi-cart-plus"></i> Add to Cart</button>
+        </form>
+        <% } else { %>
+          <a href="/auth/login" class="btn btn-accent btn-lg"><i class="bi bi-person"></i> Login to Purchase</a>
+        <% } %>
+      <% } %>
+    </div>
+  </div>
+
+  <% if (related.length > 0) { %>
+  <div class="mt-5">
+    <h3 class="section-title">Related Products</h3>
+    <div class="row g-4">
+      <% related.forEach(p => { %>
+      <div class="col-6 col-md-3">
+        <a href="/products/<%= p.id %>" class="text-decoration-none">
+          <div class="product-card">
+            <img src="https://via.placeholder.com/300x300/1a1a2e/ffffff?text=<%= encodeURIComponent(p.name.split(' ').slice(0,2).join('+')) %>"
+                 alt="<%= p.name %>" class="product-img">
+            <div class="product-info">
+              <h6 class="product-name"><%= p.name %></h6>
+              <p class="product-price">€<%= p.price.toFixed(2) %></p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>
