@@ -1,0 +1,43 @@
+<%- include('../partials/header') %>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0">All Orders</h1>
+    <a href="/admin" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Dashboard</a>
+  </div>
+
+  <div class="admin-card">
+    <div class="table-responsive">
+      <table class="table table-hover admin-table align-middle">
+        <thead>
+          <tr><th>#</th><th>Customer</th><th>Email</th><th>Total</th><th>Status</th><th>Date</th><th>Update</th></tr>
+        </thead>
+        <tbody>
+          <% orders.forEach(o => { %>
+          <tr>
+            <td>#<%= o.id %></td>
+            <td class="fw-medium"><%= o.customer %></td>
+            <td class="text-muted small"><%= o.email %></td>
+            <td class="text-accent fw-bold">€<%= o.total.toFixed(2) %></td>
+            <td><span class="badge status-badge status-<%= o.status %>"><%= o.status.toUpperCase() %></span></td>
+            <td class="text-muted small"><%= new Date(o.created_at).toLocaleDateString('en-IE') %></td>
+            <td>
+              <form action="/admin/orders/<%= o.id %>/status" method="POST" class="d-flex gap-1">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <select name="status" class="form-select form-select-sm" style="width:130px">
+                  <% ['pending','processing','shipped','delivered','cancelled'].forEach(s => { %>
+                    <option value="<%= s %>" <%= o.status === s ? 'selected' : '' %>><%= s %></option>
+                  <% }) %>
+                </select>
+                <button type="submit" class="btn btn-sm btn-accent">Update</button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

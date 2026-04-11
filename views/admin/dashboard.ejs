@@ -1,0 +1,111 @@
+<%- include('../partials/header') %>
+
+<div class="container-fluid py-4 px-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title mb-0"><i class="bi bi-shield-lock text-warning"></i> Admin Dashboard</h1>
+    <span class="badge bg-warning text-dark fs-6">Admin Panel</span>
+  </div>
+
+  <!-- Stats -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <i class="bi bi-people stat-icon text-primary"></i>
+        <div class="stat-value"><%= stats.users %></div>
+        <div class="stat-label">Customers</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <i class="bi bi-bag stat-icon text-success"></i>
+        <div class="stat-value"><%= stats.products %></div>
+        <div class="stat-label">Products</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <i class="bi bi-box stat-icon text-warning"></i>
+        <div class="stat-value"><%= stats.orders %></div>
+        <div class="stat-label">Orders</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <i class="bi bi-currency-euro stat-icon text-accent"></i>
+        <div class="stat-value">€<%= stats.revenue.toFixed(0) %></div>
+        <div class="stat-label">Revenue</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Links -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <a href="/admin/products/new" class="admin-action-card text-decoration-none">
+        <i class="bi bi-plus-circle"></i> Add New Product
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="/admin/orders" class="admin-action-card text-decoration-none">
+        <i class="bi bi-list-check"></i> Manage Orders
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="/admin/users" class="admin-action-card text-decoration-none">
+        <i class="bi bi-people"></i> Manage Users
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Recent Orders -->
+    <div class="col-lg-7">
+      <div class="admin-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">Recent Orders</h5>
+          <a href="/admin/orders" class="btn btn-sm btn-outline-secondary">View All</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover admin-table">
+            <thead>
+              <tr><th>#</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+              <% recentOrders.forEach(o => { %>
+              <tr>
+                <td>#<%= o.id %></td>
+                <td><%= o.customer %></td>
+                <td class="text-accent fw-bold">€<%= o.total.toFixed(2) %></td>
+                <td><span class="badge status-badge status-<%= o.status %>"><%= o.status.toUpperCase() %></span></td>
+                <td class="text-muted small"><%= new Date(o.created_at).toLocaleDateString('en-IE') %></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit Logs -->
+    <div class="col-lg-5">
+      <div class="admin-card">
+        <h5 class="mb-3"><i class="bi bi-journal-text"></i> Audit Log</h5>
+        <div class="audit-log-list">
+          <% logs.forEach(log => { %>
+          <div class="audit-entry">
+            <div class="d-flex justify-content-between">
+              <span class="audit-action badge-action-<%= log.action.includes('FAIL') || log.action.includes('LIMIT') ? 'danger' : 'success' %>">
+                <%= log.action %>
+              </span>
+              <span class="text-muted small"><%= new Date(log.created_at).toLocaleTimeString('en-IE') %></span>
+            </div>
+            <p class="text-muted small mb-0"><%= log.name || 'Guest' %> &mdash; <span class="text-muted"><%= log.ip %></span></p>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
