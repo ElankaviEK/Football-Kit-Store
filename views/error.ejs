@@ -1,0 +1,13 @@
+<%- include('partials/header', { currentUser: typeof currentUser !== 'undefined' ? currentUser : null, csrfToken: typeof csrfToken !== 'undefined' ? csrfToken : '', cartCount: typeof cartCount !== 'undefined' ? cartCount : 0 }) %>
+
+<div class="container py-5 text-center">
+  <div class="error-page">
+    <i class="bi bi-exclamation-triangle display-1 text-accent"></i>
+    <h1 class="page-title mt-3"><%= title %></h1>
+    <p class="text-muted fs-5 mb-4"><%= message %></p>
+    <a href="/" class="btn btn-accent me-2">Go Home</a>
+    <a href="javascript:history.back()" class="btn btn-outline-secondary">Go Back</a>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
