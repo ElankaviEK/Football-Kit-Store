@@ -16,15 +16,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
-      scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
-      imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://via.placeholder.com"],
-    }
-  },
+  contentSecurityPolicy: false,
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
 }));
 

@@ -131,4 +131,3 @@ After:
 ```javascript
 auditLog('LOGIN_FAILED', null, req.ip, email);
 auditLog('LOGIN_SUCCESS', user.id, req.ip, user.email);
-```
