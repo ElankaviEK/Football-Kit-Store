@@ -31,7 +31,7 @@
         <div class="product-card h-100">
           <a href="/products/<%= p.id %>" class="text-decoration-none">
             <div class="product-img-wrap">
-              <img src="https://via.placeholder.com/300x300/1a1a2e/ffffff?text=<%= encodeURIComponent(p.name.split(' ').slice(0,2).join('+')) %>"
+              <img src="<%= p.image %>" alt="<%= p.name %>" class="product-img">
                    alt="<%= p.name %>" class="product-img">
               <% if (p.stock < 5 && p.stock > 0) { %><span class="badge-low-stock">Low Stock</span><% } %>
               <% if (p.stock === 0) { %><span class="badge-out-stock">Out of Stock</span><% } %>
